@@ -1,0 +1,80 @@
+## Ignore Visual Studio temporary files, build results, and
+## NuGet packages. Customize this as needed.
+
+# Visual Studio IDE folder
+.vs/
+
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+
+# Rider / JetBrains
+.idea/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Visual Studio Code
+.vscode/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+*.nuspec
+*.psmdcp
+
+# Dotnet CLI artifacts
+*.dotnet-tool.json
+
+# Publish folder (if used)
+publish/
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.log
+
+# StyleCop / analyzers
+.stylecop
+*.ruleset
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# Secrets
+secrets.json
+*.key
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# GitHub workflows cache
+/.github/workflows/*.log
+/.github/workflows/*.tmp
+
+# Local NuGet source folder (if used)
+.nuget/
+
+# ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# Rider
+.idea/
+
+# Other IDEs
+*.iml

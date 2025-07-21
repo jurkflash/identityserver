@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Duende.IdentityServer" Version="7.2.4" />
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.2.4" />
+    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.2.4" />
+    <PackageReference Include="Duende.IdentityServer.EntityFramework.Storage" Version="7.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.18" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.18">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.18" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+    <PackageReference Include="Pokok.BuildingBlocks.Outbox" Version="1.2.0-preview.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\IdentityServer\" />
+    <Folder Include="Outbox\" />
+  </ItemGroup>
+
+</Project>
