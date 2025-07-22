@@ -4,12 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace Pokok.IdentityServer.Infrastructure.IdentityServer
+namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
 {
-    public class ConfigurationDbContextFactory :
-            IDesignTimeDbContextFactory<ConfigurationDbContext>
+    public class PersistedGrantDbContextFactory : IDesignTimeDbContextFactory<PersistedGrantDbContext>
     {
-        public ConfigurationDbContext CreateDbContext(string[] args)
+        public PersistedGrantDbContext CreateDbContext(string[] args)
         {
             // Step 1: Load configuration from appsettings.Development.json
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
@@ -25,18 +24,17 @@ namespace Pokok.IdentityServer.Infrastructure.IdentityServer
             var connectionString = config.GetConnectionString("IdentityConnection");
 
             // Step 2: Set up options
-            var optionsBuilder = new DbContextOptionsBuilder<ConfigurationDbContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<PersistedGrantDbContext>();
             optionsBuilder.UseNpgsql(connectionString,
                 b => b.MigrationsAssembly("Pokok.IdentityServer.Infrastructure"));
 
-            var storeOptions = new ConfigurationStoreOptions
+            var storeOptions = new OperationalStoreOptions
             {
                 // Optional: define your schema name
                 // DefaultSchema = "your_schema_name"
             };
 
-            // Fix: Use the constructor that accepts only DbContextOptions
-            var context = new ConfigurationDbContext(optionsBuilder.Options);
+            var context = new PersistedGrantDbContext(optionsBuilder.Options);
             context.StoreOptions = storeOptions; // Assign store options separately
 
             return context;

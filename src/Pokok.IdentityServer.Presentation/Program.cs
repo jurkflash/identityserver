@@ -1,4 +1,5 @@
-using Pokok.IdentityServer.Infrastructure.IdentityServer;
+using Pokok.IdentityServer.Infrastructure.Extensions;
+using Pokok.IdentityServer.Infrastructure.DuendeIdentityServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,8 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Resolve ambiguity by explicitly specifying the namespace for AddIdentity
-Pokok.IdentityServer.Infrastructure.Extensions.ServiceCollectionExtensions.AddIdentity(builder.Services, builder.Configuration);
-Pokok.IdentityServer.Infrastructure.Extensions.ServiceCollectionExtensions.AddIdentityServer(builder.Services, builder.Configuration);
+ServiceCollectionExtensions.AddIdentity(builder.Services, builder.Configuration);
+ServiceCollectionExtensions.AddIdentityServer(builder.Services, builder.Configuration);
+ServiceCollectionExtensions.AddOutbox(builder.Services, builder.Configuration);
 
 builder.Services.AddRazorPages();
 

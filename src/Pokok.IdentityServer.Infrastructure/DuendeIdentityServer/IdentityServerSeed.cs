@@ -2,7 +2,7 @@
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Pokok.IdentityServer.Infrastructure.IdentityServer
+namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
 {
     public static class IdentityServerSeed
     {

@@ -1,5 +1,5 @@
 ﻿using Pokok.BuildingBlocks.Domain.Abstractions;
-using Pokok.BuildingBlocks.Domain.ValueObjects;
+using Pokok.BuildingBlocks.Domain.SharedKernel.ValueObjects;
 using Pokok.IdentityServer.Domain.Aggregates.UserAggregate.Events;
 
 namespace Pokok.IdentityServer.Domain.Aggregates.UserAggregate.Aggregates
@@ -20,7 +20,7 @@ namespace Pokok.IdentityServer.Domain.Aggregates.UserAggregate.Aggregates
             HashedPassword = hashedPassword;
             DisplayName = displayName;
 
-            AddDomainEvent(new UserRegisteredDomainEvent(Id));
+            //AddDomainEvent(new UserRegisteredDomainEvent(Id));
         }
 
         public static User Register(string email, string hashedPassword, string? displayName = null)

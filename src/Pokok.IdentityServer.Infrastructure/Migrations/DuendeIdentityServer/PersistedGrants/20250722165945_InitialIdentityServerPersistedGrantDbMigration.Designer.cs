@@ -9,10 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Pokok.IdentityServer.Infrastructure.Migrations.IdentityServer.PersistedGrants
+namespace Pokok.IdentityServer.Infrastructure.Migrations.DuendeIdentityServer.PersistedGrants
 {
     [DbContext(typeof(PersistedGrantDbContext))]
-    [Migration("20250710165810_InitialIdentityServerPersistedGrantDbMigration")]
+    [Migration("20250722165945_InitialIdentityServerPersistedGrantDbMigration")]
     partial class InitialIdentityServerPersistedGrantDbMigration
     {
         /// <inheritdoc />

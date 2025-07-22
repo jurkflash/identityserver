@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Pokok.IdentityServer.Infrastructure.Migrations.IdentityServer.Configuration
+namespace Pokok.IdentityServer.Infrastructure.Migrations.DuendeIdentityServer.Configuration
 {
     /// <inheritdoc />
     public partial class InitialIdentityServerConfigurationDbMigration : Migration

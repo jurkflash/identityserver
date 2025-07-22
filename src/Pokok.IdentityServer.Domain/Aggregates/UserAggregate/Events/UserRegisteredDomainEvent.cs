@@ -1,5 +1,5 @@
 ﻿using Pokok.BuildingBlocks.Domain.Abstractions;
-using Pokok.BuildingBlocks.Domain.ValueObjects;
+using Pokok.BuildingBlocks.Domain.SharedKernel.ValueObjects;
 
 namespace Pokok.IdentityServer.Domain.Aggregates.UserAggregate.Events
 {

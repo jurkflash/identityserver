@@ -1,6 +1,6 @@
 ﻿using Duende.IdentityServer.Models;
 
-namespace Pokok.IdentityServer.Infrastructure.IdentityServer
+namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
 {
     public static class IdentityServerConfig
     {

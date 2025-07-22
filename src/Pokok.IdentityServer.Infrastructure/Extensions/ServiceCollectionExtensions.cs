@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Pokok.BuildingBlocks.Outbox;
 using Pokok.IdentityServer.Infrastructure.Identity;
 
 namespace Pokok.IdentityServer.Infrastructure.Extensions
@@ -54,6 +55,13 @@ namespace Pokok.IdentityServer.Infrastructure.Extensions
                 options.EnableTokenCleanup = true;
                 options.TokenCleanupInterval = 3600;
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddOutbox(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
 
             return services;
         }
