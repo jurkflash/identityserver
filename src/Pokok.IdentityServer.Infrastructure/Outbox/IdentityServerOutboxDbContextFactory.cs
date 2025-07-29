@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Pokok.BuildingBlocks.Outbox;
 
 namespace Pokok.IdentityServer.Infrastructure.Outbox
 {
@@ -21,7 +20,7 @@ namespace Pokok.IdentityServer.Infrastructure.Outbox
 
             var connectionString = config.GetConnectionString("IdentityConnection");
 
-            var optionsBuilder = new DbContextOptionsBuilder<OutboxDbContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<IdentityServerOutboxDbContext>();
             optionsBuilder.UseNpgsql(connectionString, b =>
             {
                 b.MigrationsAssembly("Pokok.IdentityServer.Infrastructure");

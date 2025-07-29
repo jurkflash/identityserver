@@ -4,15 +4,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pokok.BuildingBlocks.Outbox;
 using Pokok.IdentityServer.Infrastructure.Identity;
+using Pokok.IdentityServer.Infrastructure.Outbox;
 
 namespace Pokok.IdentityServer.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<IdentityDbContext>(options =>
-                options.UseNpgsql(config.GetConnectionString("IdentityConnection"))); // or UseSqlServer
+                options.UseNpgsql(configuration.GetConnectionString("IdentityConnection"))); // or UseSqlServer
 
             // Register ASP.NET Identity with your custom PokokUser
             services.AddIdentity<PokokUser, PokokRole>(options =>
@@ -61,6 +62,9 @@ namespace Pokok.IdentityServer.Infrastructure.Extensions
 
         public static IServiceCollection AddOutbox(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddDbContext<IdentityServerOutboxDbContext>(options =>
+                options.UseNpgsql(configuration.GetConnectionString("IdentityConnection"))); 
+            services.AddScoped<OutboxDbContext>(sp => sp.GetRequiredService<IdentityServerOutboxDbContext>());
             services.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
 
             return services;

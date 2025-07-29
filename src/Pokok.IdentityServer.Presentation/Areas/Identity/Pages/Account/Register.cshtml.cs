@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Pokok.IdentityServer.Infrastructure.Identity;
+using Pokok.IdentityServer.Domain.Aggregates.Users;
+using Pokok.BuildingBlocks.Domain.SharedKernel.ValueObjects;
 
 namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
 {
@@ -124,6 +126,7 @@ namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
+                    //Domain.Aggregates.Users.User.Register(new UserId(Guid.Parse(userId)), new Email(Input.Email), new DisplayName(user.UserName));
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

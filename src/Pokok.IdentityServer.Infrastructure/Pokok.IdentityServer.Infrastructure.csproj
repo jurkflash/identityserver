@@ -16,7 +16,19 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Pokok.BuildingBlocks.Domain" />
     <PackageReference Include="Pokok.BuildingBlocks.Outbox" />
+    <PackageReference Include="Pokok.Messaging.Email" />
+    <PackageReference Include="Pokok.BuildingBlocks.Messaging" />
+    <PackageReference Include="StackExchange.Redis" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Messaging\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pokok.IdentityServer.Application\Pokok.IdentityServer.Application.csproj" />
   </ItemGroup>
 
 </Project>

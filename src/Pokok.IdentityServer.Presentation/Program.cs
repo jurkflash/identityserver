@@ -1,5 +1,12 @@
-using Pokok.IdentityServer.Infrastructure.Extensions;
+using Pokok.BuildingBlocks.Domain.Events;
+using Pokok.BuildingBlocks.Messaging.Abstractions;
+using Pokok.BuildingBlocks.Messaging.RabbitMQ;
+using Pokok.IdentityServer.Application.DomainEventHandlers;
+using Pokok.IdentityServer.Domain.Aggregates.Users.Events;
+using Pokok.IdentityServer.Infrastructure.BackgroundWorkers;
 using Pokok.IdentityServer.Infrastructure.DuendeIdentityServer;
+using Pokok.IdentityServer.Infrastructure.Extensions;
+using Pokok.Messaging.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +19,16 @@ ServiceCollectionExtensions.AddIdentityServer(builder.Services, builder.Configur
 ServiceCollectionExtensions.AddOutbox(builder.Services, builder.Configuration);
 
 builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<IDomainEventHandler<UserRegistrationConfirmationRequestedDomainEvent>, UserRegistrationConfirmationRequestedDomainEventHandler>();
+builder.Services.Configure<EmailTemplatesOptions>(builder.Configuration.GetSection(EmailTemplatesOptions.SectionName));
+builder.Services.Configure<UserRegisteredConfirmationOptions>(builder.Configuration.GetSection(UserRegisteredConfirmationOptions.SectionName));
+builder.Services.AddScoped<ITemplateRenderer, SimpleTemplateRenderer>();
+builder.Services.AddHostedService<OutboxProcessorHostedService>();
+
+builder.Services.AddSingleton<IRabbitMQConnection, RabbitMQConnection>();
+builder.Services.AddSingleton<IMessagePublisher, RabbitMQMessagePublisher>();
+builder.Services.Configure<RabbitMQOptions>(builder.Configuration.GetSection("RabbitMQ"));
 
 var app = builder.Build();
 

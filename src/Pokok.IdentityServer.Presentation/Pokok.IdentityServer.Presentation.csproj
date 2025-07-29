@@ -9,9 +9,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
+    <PackageReference Include="Pokok.BuildingBlocks.Domain" />
+    <PackageReference Include="Pokok.Messaging.Email" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pokok.IdentityServer.Domain\Pokok.IdentityServer.Domain.csproj" />
     <ProjectReference Include="..\Pokok.IdentityServer.Infrastructure\Pokok.IdentityServer.Infrastructure.csproj" />
   </ItemGroup>
 

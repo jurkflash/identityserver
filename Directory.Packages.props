@@ -4,18 +4,21 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-	<PackageVersion Include="Pokok.BuildingBlocks.Domain" Version="1.2.0-preview.10" />
-	<PackageVersion Include="Pokok.BuildingBlocks.Cqrs" Version="1.2.0-preview.10" />
-	<PackageVersion Include="Pokok.BuildingBlocks.Outbox" Version="1.2.0-preview.10" />
-	<PackageVersion Include="Duende.IdentityServer" Version="7.2.4" />
-	<PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="7.2.4" />
-	<PackageVersion Include="Duende.IdentityServer.EntityFramework" Version="7.2.4" />
-	<PackageVersion Include="Duende.IdentityServer.EntityFramework.Storage" Version="7.2.4" />
-	<PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
-	<PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.18" />
-	<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.18" />
-	<PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="8.0.18" />
-	<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
-	<PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageVersion Include="Pokok.BuildingBlocks.Domain" Version="1.2.0-preview.18" />
+    <PackageVersion Include="Pokok.BuildingBlocks.Cqrs" Version="1.2.0-preview.18" />
+    <PackageVersion Include="Pokok.BuildingBlocks.Outbox" Version="1.2.0-preview.18" />
+    <PackageVersion Include="Pokok.Messaging.Email" Version="1.2.0-preview.18" />
+	<PackageVersion Include="Pokok.BuildingBlocks.Messaging" Version="1.2.0-preview.18" />
+    <PackageVersion Include="Duende.IdentityServer" Version="7.2.4" />
+    <PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="7.2.4" />
+    <PackageVersion Include="Duende.IdentityServer.EntityFramework" Version="7.2.4" />
+    <PackageVersion Include="Duende.IdentityServer.EntityFramework.Storage" Version="7.2.4" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.18" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.18" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="8.0.18" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageVersion Include="StackExchange.Redis" Version="2.8.58" />
   </ItemGroup>
 </Project>

@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pokok.BuildingBlocks.Cqrs" />
+    <ProjectReference Include="..\Pokok.IdentityServer.Domain\Pokok.IdentityServer.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pokok.IdentityServer.Domain\Pokok.IdentityServer.Domain.csproj" />
+	<PackageReference Include="Pokok.BuildingBlocks.Domain" />
+	<PackageReference Include="Pokok.Messaging.Email" />
+	<PackageReference Include="Pokok.BuildingBlocks.Outbox" />
   </ItemGroup>
 
 </Project>
