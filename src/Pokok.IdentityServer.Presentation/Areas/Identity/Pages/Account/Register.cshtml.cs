@@ -2,6 +2,19 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
+using Pokok.BuildingBlocks.Cqrs.Events;
+using Pokok.BuildingBlocks.Domain.SharedKernel.ValueObjects;
+using Pokok.IdentityServer.Domain.Aggregates.Users;
+using Pokok.IdentityServer.Infrastructure.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,17 +23,6 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Pokok.IdentityServer.Infrastructure.Identity;
-using Pokok.IdentityServer.Domain.Aggregates.Users;
-using Pokok.BuildingBlocks.Domain.SharedKernel.ValueObjects;
 
 namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
 {
@@ -31,21 +33,25 @@ namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
         private readonly IUserStore<PokokUser> _userStore;
         private readonly IUserEmailStore<PokokUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly IDomainEventDispatcher _dispatcher;
+        //private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<PokokUser> userManager,
             IUserStore<PokokUser> userStore,
             SignInManager<PokokUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IDomainEventDispatcher dispatcher
+            //IEmailSender emailSender
+            )
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
+            _dispatcher = dispatcher;
+            //_emailSender = emailSender;
         }
 
         /// <summary>
@@ -126,7 +132,6 @@ namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
-                    //Domain.Aggregates.Users.User.Register(new UserId(Guid.Parse(userId)), new Email(Input.Email), new DisplayName(user.UserName));
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -135,8 +140,11 @@ namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    var domainUser = Domain.Aggregates.Users.User.Register(new UserId(Guid.Parse(userId)), new Email(Input.Email), new DisplayName(user.UserName), new Domain.ValueObjects.ConfirmationLink(callbackUrl));
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _dispatcher.DispatchAsync(domainUser.DomainEvents);
+                    domainUser.ClearDomainEvents();
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
