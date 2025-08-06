@@ -4,11 +4,11 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Pokok.BuildingBlocks.Domain" Version="1.2.0-preview.20" />
-    <PackageVersion Include="Pokok.BuildingBlocks.Cqrs" Version="1.2.0-preview.20" />
-    <PackageVersion Include="Pokok.BuildingBlocks.Outbox" Version="1.2.0-preview.20" />
-    <PackageVersion Include="Pokok.Messaging.Email" Version="1.2.0-preview.20" />
-	<PackageVersion Include="Pokok.BuildingBlocks.Messaging" Version="1.2.0-preview.20" />
+    <PackageVersion Include="Pokok.BuildingBlocks.Domain" Version="1.2.0-preview.23" />
+    <PackageVersion Include="Pokok.BuildingBlocks.Cqrs" Version="1.2.0-preview.23" />
+    <PackageVersion Include="Pokok.BuildingBlocks.Outbox" Version="1.2.0-preview.23" />
+    <PackageVersion Include="Pokok.Messaging.Email" Version="1.2.0-preview.23" />
+	<PackageVersion Include="Pokok.BuildingBlocks.Messaging" Version="1.2.0-preview.23" />
     <PackageVersion Include="Duende.IdentityServer" Version="7.2.4" />
     <PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="7.2.4" />
     <PackageVersion Include="Duende.IdentityServer.EntityFramework" Version="7.2.4" />

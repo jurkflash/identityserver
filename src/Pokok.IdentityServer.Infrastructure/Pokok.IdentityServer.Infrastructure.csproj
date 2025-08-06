@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Messaging\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Pokok.IdentityServer.Application\Pokok.IdentityServer.Application.csproj" />
   </ItemGroup>
 

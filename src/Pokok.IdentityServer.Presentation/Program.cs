@@ -7,7 +7,6 @@ using Pokok.IdentityServer.Domain.Aggregates.Users.Events;
 using Pokok.IdentityServer.Infrastructure.BackgroundWorkers;
 using Pokok.IdentityServer.Infrastructure.DuendeIdentityServer;
 using Pokok.IdentityServer.Infrastructure.Extensions;
-using Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account;
 using Pokok.Messaging.Email;
 
 var builder = WebApplication.CreateBuilder(args);

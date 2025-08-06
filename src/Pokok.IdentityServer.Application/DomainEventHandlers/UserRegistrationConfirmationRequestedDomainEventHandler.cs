@@ -26,9 +26,9 @@ namespace Pokok.IdentityServer.Application.DomainEventHandlers
                 CallbackUrl = domainEvent.ConfirmationLink
             });
 
-            var emailPayload = new EmailMessagePayload
+            var emailPayload = new EmailDispatchMessage
             {
-                ToEmail = domainEvent.Email.Value,
+                To = new List<string> { domainEvent.Email.Value },
                 Subject = template.Subject,
                 Body = template.Body,
                 TemplateKey = EmailTemplateKey.UserRegisteredConfirmation.ToString(),
