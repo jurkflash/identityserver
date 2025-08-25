@@ -21,7 +21,7 @@ ServiceCollectionExtensions.AddOutbox(builder.Services, builder.Configuration);
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddScoped<IDomainEventHandler<UserRegistrationConfirmationRequestedDomainEvent>, UserRegistrationConfirmationRequestedDomainEventHandler>();
+builder.Services.AddScoped<IDomainEventHandler<UserRegistrationConfirmationRequested>, UserRegistrationConfirmationRequestedHandler>();
 builder.Services.AddOptions<EmailTemplatesOptions>().BindConfiguration(EmailTemplatesOptions.SectionName);
 builder.Services.AddScoped<ITemplateRenderer, SimpleTemplateRenderer>();
 builder.Services.AddHostedService<OutboxProcessorHostedService>();

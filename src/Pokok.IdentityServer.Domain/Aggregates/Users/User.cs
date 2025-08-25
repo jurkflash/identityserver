@@ -20,7 +20,7 @@ namespace Pokok.IdentityServer.Domain.Aggregates.Users
             DisplayName = displayName;
             ConfirmationLink = confirmationLink;
 
-            AddDomainEvent(new UserRegistrationConfirmationRequestedDomainEvent(userId, email, displayName, confirmationLink));
+            AddDomainEvent(new UserRegistrationConfirmationRequested(userId, email, displayName, confirmationLink));
         }
 
         public static User Register(UserId userId, Email email, DisplayName displayName, ConfirmationLink confirmationLink)

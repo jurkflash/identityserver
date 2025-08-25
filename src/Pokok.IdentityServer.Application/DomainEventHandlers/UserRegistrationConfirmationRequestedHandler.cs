@@ -7,18 +7,18 @@ using System.Text.Json;
 
 namespace Pokok.IdentityServer.Application.DomainEventHandlers
 {
-    public class UserRegistrationConfirmationRequestedDomainEventHandler : IDomainEventHandler<UserRegistrationConfirmationRequestedDomainEvent>
+    public class UserRegistrationConfirmationRequestedHandler : IDomainEventHandler<UserRegistrationConfirmationRequested>
     {
         private readonly ITemplateRenderer _renderer;
         private readonly IOutboxMessageRepository _outboxMessageRepository;
 
-        public UserRegistrationConfirmationRequestedDomainEventHandler(ITemplateRenderer renderer, IOutboxMessageRepository outboxMessageRepository)
+        public UserRegistrationConfirmationRequestedHandler(ITemplateRenderer renderer, IOutboxMessageRepository outboxMessageRepository)
         {
             _renderer = renderer;
             _outboxMessageRepository = outboxMessageRepository;
         }
 
-        public async Task Handle(UserRegistrationConfirmationRequestedDomainEvent domainEvent, CancellationToken cancellationToken)
+        public async Task Handle(UserRegistrationConfirmationRequested domainEvent, CancellationToken cancellationToken)
         {
             var template = _renderer.Render(EmailTemplateKey.UserRegisteredConfirmation, new
             {
