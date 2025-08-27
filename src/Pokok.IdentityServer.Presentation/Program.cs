@@ -4,9 +4,7 @@ using Pokok.BuildingBlocks.Messaging.Abstractions;
 using Pokok.BuildingBlocks.Messaging.RabbitMQ;
 using Pokok.IdentityServer.Application.DomainEventHandlers;
 using Pokok.IdentityServer.Domain.Aggregates.Users.Events;
-using Pokok.IdentityServer.Infrastructure.BackgroundWorkers;
 using Pokok.IdentityServer.Infrastructure.DuendeIdentityServer;
-using Pokok.IdentityServer.Infrastructure.Extensions;
 using Pokok.Messaging.Email;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,16 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Resolve ambiguity by explicitly specifying the namespace for AddIdentity
-ServiceCollectionExtensions.AddIdentity(builder.Services, builder.Configuration);
-ServiceCollectionExtensions.AddIdentityServer(builder.Services, builder.Configuration);
-ServiceCollectionExtensions.AddOutbox(builder.Services, builder.Configuration);
+Pokok.IdentityServer.Infrastructure.Extensions.ServiceCollectionExtensions.AddIdentity(builder.Services, builder.Configuration);
+Pokok.IdentityServer.Infrastructure.Extensions.ServiceCollectionExtensions.AddIdentityServer(builder.Services, builder.Configuration);
+Pokok.IdentityServer.Infrastructure.Extensions.ServiceCollectionExtensions.AddOutbox(builder.Services, builder.Configuration);
 
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<IDomainEventHandler<UserRegistrationConfirmationRequested>, UserRegistrationConfirmationRequestedHandler>();
 builder.Services.AddOptions<EmailTemplatesOptions>().BindConfiguration(EmailTemplatesOptions.SectionName);
 builder.Services.AddScoped<ITemplateRenderer, SimpleTemplateRenderer>();
-builder.Services.AddHostedService<OutboxProcessorHostedService>();
 
 builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 builder.Services.AddSingleton<IRabbitMQConnection, RabbitMQConnection>();

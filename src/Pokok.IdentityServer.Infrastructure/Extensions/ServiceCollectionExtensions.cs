@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Pokok.BuildingBlocks.Messaging.Abstractions;
+using Pokok.BuildingBlocks.Messaging.RabbitMQ;
 using Pokok.BuildingBlocks.Outbox;
 using Pokok.IdentityServer.Infrastructure.Identity;
 using Pokok.IdentityServer.Infrastructure.Outbox;
@@ -66,6 +68,7 @@ namespace Pokok.IdentityServer.Infrastructure.Extensions
                 options.UseNpgsql(configuration.GetConnectionString("IdentityConnection"))); 
             services.AddScoped<OutboxDbContext>(sp => sp.GetRequiredService<IdentityServerOutboxDbContext>());
             services.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
+            services.AddOutboxProcessor<IdentityServerOutboxDbContext>();
 
             return services;
         }
