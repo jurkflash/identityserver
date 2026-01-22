@@ -6,7 +6,13 @@ namespace Pokok.IdentityServer.Infrastructure.Identity
     {
         public string? DisplayName { get; set; }
 
-        // Optional: For global multi-tenancy
-        public Guid? TenantId { get; set; }
+        public int IdentityTenantId { get; private set; }
+
+        private PokokUser() { } // EF
+
+        public PokokUser(int identityTenantId)
+        {
+            IdentityTenantId = identityTenantId;
+        }
     }
 }

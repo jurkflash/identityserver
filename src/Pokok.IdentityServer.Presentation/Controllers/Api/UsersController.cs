@@ -56,10 +56,9 @@ namespace Pokok.IdentityServer.Presentation.Controllers.Api
                 });
             }
 
-            var user = new PokokUser
+            var user = new PokokUser(1)
             {
                 DisplayName = request.DisplayName,
-                TenantId = request.TenantId
             };
 
             await _userStore.SetUserNameAsync(user, request.Email, CancellationToken.None);

@@ -22,6 +22,15 @@ namespace Pokok.IdentityServer.Infrastructure.Identity
 
         private static void ConfigureIdentityTenant(ModelBuilder builder)
         {
+            builder.Entity<PokokUser>(entity =>
+            {
+                entity.Property(u => u.DisplayName)
+                      .HasMaxLength(200);
+
+                entity.Property(u => u.IdentityTenantId)
+                      .IsRequired();
+            });
+
             builder.Entity<IdentityTenant>(entity =>
             {
                 entity.ToTable("IdentityTenants");
