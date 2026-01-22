@@ -52,9 +52,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-var environment = builder.Environment.EnvironmentName;
-await IdentityServerSeed.SeedAsync(app.Services, environment);
-
 app.MapRazorPages(); // If you're using Map-based minimal hosting
 
 app.Run();

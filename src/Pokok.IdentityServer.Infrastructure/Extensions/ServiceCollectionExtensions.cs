@@ -7,6 +7,7 @@ using Pokok.BuildingBlocks.Messaging.RabbitMQ;
 using Pokok.BuildingBlocks.Outbox;
 using Pokok.IdentityServer.Infrastructure.Identity;
 using Pokok.IdentityServer.Infrastructure.Outbox;
+using System.Runtime;
 
 namespace Pokok.IdentityServer.Infrastructure.Extensions
 {
@@ -67,7 +68,7 @@ namespace Pokok.IdentityServer.Infrastructure.Extensions
             services.AddDbContext<IdentityServerOutboxDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("IdentityConnection"))); 
             services.AddScoped<OutboxDbContext>(sp => sp.GetRequiredService<IdentityServerOutboxDbContext>());
-            services.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
+            services.Configure<OutboxOptions>(configuration.GetSection("Outbox"));
             services.AddOutboxProcessor<IdentityServerOutboxDbContext>();
 
             return services;
