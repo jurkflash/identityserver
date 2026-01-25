@@ -1,19 +1,21 @@
 ﻿using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
 {
     public static class IdentityServerSeed
     {
-        public static async Task SeedAsync(IServiceProvider serviceProvider, string environment)
+        public static async Task SeedAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+            var identityServerOptions = scope.ServiceProvider.GetRequiredService<IOptions<IdentityServerOptions>>().Value;
 
             if (!context.Clients.Any())
             {
-                foreach (var client in IdentityServerConfig.GetClients(environment))
+                foreach (var client in IdentityServerConfig.GetClients(identityServerOptions.Clients))
                     context.Clients.Add(client.ToEntity());
 
                 await context.SaveChangesAsync();

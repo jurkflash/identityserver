@@ -43,7 +43,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-await IdentityServerSeed.SeedAsync(app.Services, builder.Environment.EnvironmentName);
+await IdentityServerSeed.SeedAsync(app.Services);
 app.UseAuthentication();    // Required before UseIdentityServer
 app.UseAuthorization();
 app.UseIdentityServer();    // Registers IdentityServer middleware

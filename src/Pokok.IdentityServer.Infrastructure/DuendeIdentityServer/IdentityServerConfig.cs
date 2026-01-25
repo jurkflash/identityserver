@@ -4,66 +4,100 @@ namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
 {
     public static class IdentityServerConfig
     {
-        public static IEnumerable<Client> GetClients(string environment)
+        public static IEnumerable<Client> GetClients(IEnumerable<ClientConfiguration> clientConfigs)
         {
             var clients = new List<Client>();
 
-            // Shared clients for all environments
-            clients.Add(new Client
+            foreach (var config in clientConfigs)
             {
-                ClientId = "pokok-portal",
-                ClientName = "Pokok JMB Portal",
-                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                RequireClientSecret = false,
-                AllowedScopes = { "openid", "profile", "pokok.api" },
-                AllowOfflineAccess = true,
-                AccessTokenLifetime = 3600
-            });
-
-            if (environment == "Development")
-            {
-                clients.Add(new Client
+                var client = new Client
                 {
-                    ClientId = "swagger-dev",
-                    ClientName = "Swagger (Development)",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("dev-secret".Sha256()) },
-                    AllowedScopes = { "pokok.api" }
-                });
-            }
+                    ClientId = config.ClientId,
+                    ClientName = config.ClientName,
+                    AllowedGrantTypes = MapGrantTypes(config.GrantTypes),
+                    RequireClientSecret = config.RequireClientSecret,
+                    AllowedScopes = config.AllowedScopes,
+                    AllowOfflineAccess = config.AllowOfflineAccess,
+                    AccessTokenLifetime = config.AccessTokenLifetime
+                };
 
-            if (environment == "Production")
-            {
-                clients.Add(new Client
+                if (config.ClientSecrets.Any())
                 {
-                    ClientId = "external-client-prod",
-                    ClientName = "External Client (Prod)",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("prod-secret".Sha256()) },
-                    AllowedScopes = { "pokok.api" }
-                });
+                    client.ClientSecrets = config.ClientSecrets
+                        .Select(secret => new Secret(secret.Sha256()))
+                        .ToList();
+                }
+
+                clients.Add(client);
             }
 
             return clients;
         }
 
-    public static IEnumerable<IdentityResource> GetIdentityResources() => new List<IdentityResource>
-    {
-        new IdentityResources.OpenId(),
-        new IdentityResources.Profile(),
-    };
-
-    public static IEnumerable<ApiScope> GetApiScopes() => new List<ApiScope>
-    {
-        new ApiScope("pokok.api", "Pokok API")
-    };
-
-    public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>
-    {
-        new ApiResource("pokok.api", "Pokok API")
+        private static ICollection<string> MapGrantTypes(List<string> grantTypes)
         {
-            Scopes = { "pokok.api" }
+            var mapped = new List<string>();
+            foreach (var grantType in grantTypes)
+            {
+                mapped.Add(grantType.ToLowerInvariant() switch
+                {
+                    "password" => GrantType.ResourceOwnerPassword,
+                    "client_credentials" => GrantType.ClientCredentials,
+                    "authorization_code" => GrantType.AuthorizationCode,
+                    "implicit" => GrantType.Implicit,
+                    "hybrid" => GrantType.Hybrid,
+                    _ => grantType
+                });
+            }
+            return mapped;
         }
-    };
+
+        public static IEnumerable<IdentityResource> GetIdentityResources() => new List<IdentityResource>
+        {
+            new IdentityResources.OpenId(),
+            new IdentityResources.Profile(),
+            new IdentityResources.Email(),
+
+            // Custom identity scope for tenant awareness
+            new IdentityResource(
+                name: "pokok.identity",
+                displayName: "Pokok Identity",
+                userClaims: new[] { "tenant_id" }
+            )
+        };
+
+        public static IEnumerable<ApiScope> GetApiScopes() => new List<ApiScope>
+        {
+            // Pokok Living product
+            new ApiScope("pokok.living.api", "Pokok Living API"),
+
+            // Identity management (admin / internal)
+            new ApiScope("pokok.identity.admin", "Pokok Identity Admin"),
+
+            // Internal service-to-service
+            new ApiScope("pokok.internal.user.write", "Internal User Write Access"),
+            new ApiScope("pokok.internal.user.read", "Internal User Read Access")
+        };
+
+        public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>
+        {
+            new ApiResource("pokok.living", "Pokok Living Backend")
+            {
+                Scopes =
+                {
+                    "pokok.living.api"
+                }
+            },
+
+            new ApiResource("pokok.identity", "Pokok Identity API")
+            {
+                Scopes =
+                {
+                    "pokok.identity.admin",
+                    "pokok.internal.user.write",
+                    "pokok.internal.user.read"
+                }
+            }
+        };
     }
 }

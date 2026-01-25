@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pokok.BuildingBlocks.Messaging.Abstractions;
 using Pokok.BuildingBlocks.Messaging.RabbitMQ;
 using Pokok.BuildingBlocks.Outbox;
+using Pokok.IdentityServer.Infrastructure.DuendeIdentityServer;
 using Pokok.IdentityServer.Infrastructure.Identity;
 using Pokok.IdentityServer.Infrastructure.Outbox;
 using System.Runtime;
@@ -35,6 +36,9 @@ namespace Pokok.IdentityServer.Infrastructure.Extensions
             var migrationsAssembly = typeof(ServiceCollectionExtensions).Assembly.GetName().Name;
             var connectionString = configuration.GetConnectionString("IdentityConnection");
 
+            // Register IdentityServer options
+            services.Configure<IdentityServerOptions>(configuration.GetSection(IdentityServerOptions.SectionName));
+
             // IdentityServer with EF-based config + operational store
             services.AddIdentityServer(options =>
             {
@@ -58,7 +62,8 @@ namespace Pokok.IdentityServer.Infrastructure.Extensions
 
                 options.EnableTokenCleanup = true;
                 options.TokenCleanupInterval = 3600;
-            });
+            })
+            .AddProfileService<PokokProfileService>();
 
             return services;
         }

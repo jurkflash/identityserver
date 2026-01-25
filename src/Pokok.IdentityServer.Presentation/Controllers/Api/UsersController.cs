@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.WebUtilities;
 using Pokok.BuildingBlocks.Cqrs.Events;
 using Pokok.BuildingBlocks.Domain.SharedKernel.ValueObjects;
 using Pokok.IdentityServer.Application.Contracts;
-using Pokok.IdentityServer.Domain.Aggregates.Users;
 using Pokok.IdentityServer.Infrastructure.Identity;
 using System.Text;
 
@@ -56,7 +55,7 @@ namespace Pokok.IdentityServer.Presentation.Controllers.Api
                 });
             }
 
-            var user = new PokokUser(1)
+            var user = new PokokUser(request.TenantId)
             {
                 DisplayName = request.DisplayName,
             };
