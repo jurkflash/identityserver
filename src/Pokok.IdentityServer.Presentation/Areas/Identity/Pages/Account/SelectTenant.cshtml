@@ -1,0 +1,46 @@
+@page
+@model Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account.SelectTenantModel
+@{
+    ViewData["Title"] = "Select Tenant";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Select Your Organization</h2>
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">@Model.ErrorMessage</div>
+                    }
+
+                    <form method="post">
+                        <input type="hidden" asp-for="ReturnUrl" />
+
+                        <div class="mb-3">
+                            <label for="tenantId" class="form-label">Organization</label>
+                            <select asp-for="SelectedTenantId" class="form-select" id="tenantId">
+                                <option value="">-- Select an organization --</option>
+                                @foreach (var tenant in Model.Tenants)
+                                {
+                                    <option value="@tenant.Id">@tenant.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="SelectedTenantId" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Continue</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

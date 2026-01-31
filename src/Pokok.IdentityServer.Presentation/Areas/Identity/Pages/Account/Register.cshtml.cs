@@ -170,7 +170,7 @@ namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
         {
             try
             {
-                return new PokokUser(1);
+                return new PokokUser();
             }
             catch
             {

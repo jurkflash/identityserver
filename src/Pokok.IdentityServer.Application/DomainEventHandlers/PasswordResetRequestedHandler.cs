@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using Pokok.BuildingBlocks.Outbox;
 using Pokok.IdentityServer.Application.Options;
 using Pokok.IdentityServer.Domain.Aggregates.Users.Events;
@@ -6,12 +6,12 @@ using Pokok.Messaging.Email;
 
 namespace Pokok.IdentityServer.Application.DomainEventHandlers
 {
-    public class UserRegistrationConfirmationRequestedHandler 
-        : EmailDomainEventHandler<UserRegistrationConfirmationRequested>
+    public class PasswordResetRequestedHandler 
+        : EmailDomainEventHandler<PasswordResetRequested>
     {
         private readonly EmailTemplatesConfig _config;
 
-        public UserRegistrationConfirmationRequestedHandler(
+        public PasswordResetRequestedHandler(
             ITemplateRenderer renderer,
             IOutboxMessageRepository outboxMessageRepository,
             IOptions<EmailTemplatesConfig> config)
@@ -20,17 +20,17 @@ namespace Pokok.IdentityServer.Application.DomainEventHandlers
             _config = config.Value;
         }
 
-        protected override EmailData GetEmailData(UserRegistrationConfirmationRequested domainEvent)
+        protected override EmailData GetEmailData(PasswordResetRequested domainEvent)
         {
-            var template = _config.GetTemplate(EmailTemplateKeys.UserRegistrationConfirmation)
-                ?? throw new InvalidOperationException($"Email template '{EmailTemplateKeys.UserRegistrationConfirmation}' not configured");
+            var template = _config.GetTemplate(EmailTemplateKeys.PasswordReset)
+                ?? throw new InvalidOperationException($"Email template '{EmailTemplateKeys.PasswordReset}' not configured");
 
             return new EmailData(
                 TemplateOptions: template,
                 TemplateData: new
                 {
                     DisplayName = domainEvent.DisplayName.Value,
-                    CallbackUrl = domainEvent.ConfirmationLink
+                    CallbackUrl = domainEvent.ResetLink.Value
                 },
                 Recipients: [domainEvent.Email.Value],
                 OccurredOn: domainEvent.OccurredOn);

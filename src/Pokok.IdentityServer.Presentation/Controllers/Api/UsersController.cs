@@ -55,7 +55,7 @@ namespace Pokok.IdentityServer.Presentation.Controllers.Api
                 });
             }
 
-            var user = new PokokUser(request.TenantId)
+            var user = new PokokUser()
             {
                 DisplayName = request.DisplayName,
             };

@@ -6,13 +6,13 @@ namespace Pokok.IdentityServer.Infrastructure.Identity
     {
         public string? DisplayName { get; set; }
 
-        public int IdentityTenantId { get; private set; }
+        public string? TenantId { get; set; }
 
         private PokokUser() { } // EF
 
-        public PokokUser(int identityTenantId)
+        public PokokUser(string? tenantId = null)
         {
-            IdentityTenantId = identityTenantId;
+            TenantId = tenantId;
         }
     }
 }

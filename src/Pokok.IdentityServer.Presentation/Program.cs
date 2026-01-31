@@ -5,6 +5,8 @@ using Pokok.BuildingBlocks.Messaging.RabbitMQ;
 using Pokok.IdentityServer.Application.DomainEventHandlers;
 using Pokok.IdentityServer.Domain.Aggregates.Users.Events;
 using Pokok.IdentityServer.Infrastructure.DuendeIdentityServer;
+using Pokok.IdentityServer.Infrastructure.Identity;
+using Pokok.IdentityServer.Application.Options;
 using Pokok.Messaging.Email;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +22,8 @@ Pokok.IdentityServer.Infrastructure.Extensions.ServiceCollectionExtensions.AddOu
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<IDomainEventHandler<UserRegistrationConfirmationRequested>, UserRegistrationConfirmationRequestedHandler>();
-builder.Services.AddOptions<EmailTemplatesOptions>().BindConfiguration(EmailTemplatesOptions.SectionName);
+builder.Services.AddScoped<IDomainEventHandler<PasswordResetRequested>, PasswordResetRequestedHandler>();
+builder.Services.AddOptions<EmailTemplatesConfig>().BindConfiguration(EmailTemplatesConfig.SectionName);
 builder.Services.AddScoped<ITemplateRenderer, SimpleTemplateRenderer>();
 
 builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
@@ -43,7 +46,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseTenantResolution();
+
+// Seed data
 await IdentityServerSeed.SeedAsync(app.Services);
+await IdentitySeed.SeedAsync(app.Services);
+
 app.UseAuthentication();    // Required before UseIdentityServer
 app.UseAuthorization();
 app.UseIdentityServer();    // Registers IdentityServer middleware

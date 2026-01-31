@@ -1,0 +1,66 @@
+@page
+@model Pokok.IdentityServer.Presentation.Areas.Admin.Pages.Tenants.IndexModel
+@{
+    ViewData["Title"] = "Tenant Management";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Tenant Management</h1>
+        <a asp-page="Create" class="btn btn-primary">Create New Tenant</a>
+    </div>
+
+    @if (Model.Message != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @Model.Message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model.Tenants.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Subdomain</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tenant in Model.Tenants)
+                        {
+                            <tr>
+                                <td>@tenant.Name</td>
+                                <td>@(tenant.Subdomain ?? "N/A")</td>
+                                <td>
+                                    @if (tenant.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactive</span>
+                                    }
+                                </td>
+                                <td>@tenant.CreatedAt.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <a asp-page="Edit" asp-route-id="@tenant.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted">No tenants found. Create your first tenant to get started.</p>
+            }
+        </div>
+    </div>
+</div>

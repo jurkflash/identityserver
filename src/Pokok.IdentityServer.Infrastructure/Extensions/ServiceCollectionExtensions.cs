@@ -5,9 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Pokok.BuildingBlocks.Messaging.Abstractions;
 using Pokok.BuildingBlocks.Messaging.RabbitMQ;
 using Pokok.BuildingBlocks.Outbox;
+using Pokok.IdentityServer.Application.Contracts.Identity;
+using Pokok.IdentityServer.Application.Contracts.Persistence;
 using Pokok.IdentityServer.Infrastructure.DuendeIdentityServer;
 using Pokok.IdentityServer.Infrastructure.Identity;
 using Pokok.IdentityServer.Infrastructure.Outbox;
+using Pokok.IdentityServer.Infrastructure.Persistence;
 using System.Runtime;
 
 namespace Pokok.IdentityServer.Infrastructure.Extensions
@@ -19,14 +22,23 @@ namespace Pokok.IdentityServer.Infrastructure.Extensions
             services.AddDbContext<IdentityDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("IdentityConnection"))); // or UseSqlServer
 
-            // Register ASP.NET Identity with your custom PokokUser
+            // Register HttpContextAccessor for tenant resolution
+            services.AddHttpContextAccessor();
+
+            // Register multi-tenancy services
+            services.AddScoped<ITenantContext, TenantContext>();
+            services.AddScoped<ITenantResolver, CompositeTenantResolver>();
+            services.AddScoped<ITenantStore, TenantStore>();
+
+            // Register ASP.NET Identity with your custom PokokUser and custom claims factory
             services.AddIdentity<PokokUser, PokokRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;
                 // Add more identity options here
             })
             .AddEntityFrameworkStores<IdentityDbContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddClaimsPrincipalFactory<PokokUserClaimsPrincipalFactory>();
 
             return services;
         }

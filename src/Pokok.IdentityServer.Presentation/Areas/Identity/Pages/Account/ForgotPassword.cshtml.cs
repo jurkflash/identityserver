@@ -2,29 +2,29 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Pokok.BuildingBlocks.Cqrs.Events;
+using Pokok.BuildingBlocks.Domain.SharedKernel.ValueObjects;
+using Pokok.IdentityServer.Domain.Aggregates.Users.Events;
+using Pokok.IdentityServer.Domain.ValueObjects;
+using Pokok.IdentityServer.Infrastructure.Identity;
 
 namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
 {
     public class ForgotPasswordModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly UserManager<PokokUser> _userManager;
+        private readonly IDomainEventDispatcher _dispatcher;
 
-        public ForgotPasswordModel(UserManager<IdentityUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<PokokUser> userManager, IDomainEventDispatcher dispatcher)
         {
             _userManager = userManager;
-            _emailSender = emailSender;
+            _dispatcher = dispatcher;
         }
 
         /// <summary>
@@ -60,8 +60,6 @@ namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
                     return RedirectToPage("./ForgotPasswordConfirmation");
                 }
 
-                // For more information on how to enable account confirmation and password reset please
-                // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(
@@ -70,10 +68,13 @@ namespace Pokok.IdentityServer.Presentation.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                var passwordResetEvent = new PasswordResetRequested(
+                    new UserId(Guid.Parse(user.Id)),
+                    new Email(Input.Email),
+                    new DisplayName(user.DisplayName ?? user.UserName),
+                    new ConfirmationLink(callbackUrl));
+
+                await _dispatcher.DispatchAsync(new[] { passwordResetEvent });
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
