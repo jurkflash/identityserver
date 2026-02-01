@@ -5,6 +5,7 @@ namespace Pokok.IdentityServer.Application.Contracts
         public string UserId { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
+        public string? TenantId { get; set; }
         public string? PasswordResetLink { get; set; }
         public bool Success { get; set; }
         public List<string> Errors { get; set; } = new();

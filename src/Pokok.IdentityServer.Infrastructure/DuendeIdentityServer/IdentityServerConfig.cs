@@ -1,4 +1,5 @@
 ﻿using Duende.IdentityServer.Models;
+using System.Security.Claims;
 
 namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
 {
@@ -26,6 +27,18 @@ namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
                     client.ClientSecrets = config.ClientSecrets
                         .Select(secret => new Secret(secret.Sha256()))
                         .ToList();
+                }
+
+                // Add tenant_id as a client claim if configured
+                // This claim will be included in access tokens issued to this client
+                if (!string.IsNullOrWhiteSpace(config.TenantId))
+                {
+                    client.Claims = new List<ClientClaim>
+                    {
+                        new ClientClaim("tenant_id", config.TenantId)
+                    };
+                    client.AlwaysSendClientClaims = true;
+                    client.ClientClaimsPrefix = string.Empty; // Don't prefix claims
                 }
 
                 clients.Add(client);

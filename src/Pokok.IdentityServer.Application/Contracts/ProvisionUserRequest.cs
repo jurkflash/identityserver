@@ -10,7 +10,5 @@ namespace Pokok.IdentityServer.Application.Contracts
 
         [Required]
         public string DisplayName { get; set; } = string.Empty;
-
-        public int TenantId { get; set; }
     }
 }

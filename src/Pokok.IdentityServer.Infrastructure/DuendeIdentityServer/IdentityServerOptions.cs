@@ -17,5 +17,11 @@ namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
         public List<string> AllowedScopes { get; set; } = new();
         public bool AllowOfflineAccess { get; set; }
         public int AccessTokenLifetime { get; set; } = 3600;
+        
+        /// <summary>
+        /// Tenant ID that this client is authorized to manage.
+        /// Users created by this client will be assigned to this tenant.
+        /// </summary>
+        public string? TenantId { get; set; }
     }
 }
