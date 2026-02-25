@@ -1,6 +1,8 @@
 ﻿using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
@@ -12,38 +14,85 @@ namespace Pokok.IdentityServer.Infrastructure.DuendeIdentityServer
             using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
             var identityServerOptions = scope.ServiceProvider.GetRequiredService<IOptions<IdentityServerOptions>>().Value;
+            var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
+            var logger = loggerFactory.CreateLogger("IdentityServerSeed");
 
-            if (!context.Clients.Any())
+            await SeedClientsAsync(context, identityServerOptions, logger);
+            await SeedIdentityResourcesAsync(context, logger);
+            await SeedApiScopesAsync(context, logger);
+            await SeedApiResourcesAsync(context, logger);
+        }
+
+        private static async Task SeedClientsAsync(ConfigurationDbContext context, IdentityServerOptions options, ILogger logger)
+        {
+            var existingClientIds = await context.Clients
+                .Select(c => c.ClientId)
+                .ToListAsync();
+
+            foreach (var client in IdentityServerConfig.GetClients(options.Clients))
             {
-                foreach (var client in IdentityServerConfig.GetClients(identityServerOptions.Clients))
+                if (!existingClientIds.Contains(client.ClientId))
+                {
                     context.Clients.Add(client.ToEntity());
-
-                await context.SaveChangesAsync();
+                    logger.LogInformation("Client '{ClientId}' seeded", client.ClientId);
+                }
             }
 
-            if (!context.IdentityResources.Any())
+            await context.SaveChangesAsync();
+        }
+
+        private static async Task SeedIdentityResourcesAsync(ConfigurationDbContext context, ILogger logger)
+        {
+            var existingResourceNames = await context.IdentityResources
+                .Select(r => r.Name)
+                .ToListAsync();
+
+            foreach (var resource in IdentityServerConfig.GetIdentityResources())
             {
-                foreach (var resource in IdentityServerConfig.GetIdentityResources())
+                if (!existingResourceNames.Contains(resource.Name))
+                {
                     context.IdentityResources.Add(resource.ToEntity());
-
-                await context.SaveChangesAsync();
+                    logger.LogInformation("Identity resource '{Name}' seeded", resource.Name);
+                }
             }
 
-            if (!context.ApiScopes.Any())
+            await context.SaveChangesAsync();
+        }
+
+        private static async Task SeedApiScopesAsync(ConfigurationDbContext context, ILogger logger)
+        {
+            var existingScopeNames = await context.ApiScopes
+                .Select(s => s.Name)
+                .ToListAsync();
+
+            foreach (var apiScope in IdentityServerConfig.GetApiScopes())
             {
-                foreach (var scopeObj in IdentityServerConfig.GetApiScopes())
-                    context.ApiScopes.Add(scopeObj.ToEntity());
-
-                await context.SaveChangesAsync();
+                if (!existingScopeNames.Contains(apiScope.Name))
+                {
+                    context.ApiScopes.Add(apiScope.ToEntity());
+                    logger.LogInformation("API scope '{Name}' seeded", apiScope.Name);
+                }
             }
 
-            if (!context.ApiResources.Any())
+            await context.SaveChangesAsync();
+        }
+
+        private static async Task SeedApiResourcesAsync(ConfigurationDbContext context, ILogger logger)
+        {
+            var existingResourceNames = await context.ApiResources
+                .Select(r => r.Name)
+                .ToListAsync();
+
+            foreach (var resource in IdentityServerConfig.GetApiResources())
             {
-                foreach (var api in IdentityServerConfig.GetApiResources())
-                    context.ApiResources.Add(api.ToEntity());
-
-                await context.SaveChangesAsync();
+                if (!existingResourceNames.Contains(resource.Name))
+                {
+                    context.ApiResources.Add(resource.ToEntity());
+                    logger.LogInformation("API resource '{Name}' seeded", resource.Name);
+                }
             }
+
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -21,6 +21,14 @@ Pokok.IdentityServer.Infrastructure.Extensions.ServiceCollectionExtensions.AddOu
 
 builder.Services.AddRazorPages();
 
+// Add JWT Bearer authentication for API endpoints
+builder.Services.AddAuthentication()
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = builder.Configuration["Authentication:Authority"];
+        options.TokenValidationParameters.ValidateAudience = false;
+    });
+
 builder.Services.AddScoped<IDomainEventHandler<UserRegistrationConfirmationRequested>, UserRegistrationConfirmationRequestedHandler>();
 builder.Services.AddScoped<IDomainEventHandler<PasswordResetRequested>, PasswordResetRequestedHandler>();
 builder.Services.AddOptions<EmailTemplatesConfig>().BindConfiguration(EmailTemplatesConfig.SectionName);

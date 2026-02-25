@@ -14,7 +14,7 @@ namespace Pokok.IdentityServer.Presentation.Controllers.Api
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<PokokUser> _userManager;
@@ -89,6 +89,20 @@ namespace Pokok.IdentityServer.Presentation.Controllers.Api
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage)
                         .ToList()
+                });
+            }
+
+            var existingUser = await _userManager.FindByEmailAsync(request.Email);
+            if (existingUser != null)
+            {
+                _logger.LogWarning(
+                    "User creation attempted with existing email: {Email}, TenantId: {TenantId}", 
+                    request.Email, tenantId);
+                
+                return Conflict(new ProvisionUserResponse
+                {
+                    Success = false,
+                    Errors = [$"A user with email '{request.Email}' already exists."]
                 });
             }
 
